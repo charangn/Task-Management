@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management Application</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20;
+            padding: 10;
+            background-image: url("backi.png"); 
+            background-size: cover;
+            background-position: center;
+        }
+
+        header {
+           
+            color: #fff;
+            padding: 20px;
+            text-align: center bottom;
+        }
+        /* Style for view button */
+.view-btn {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-right: 5px; /* Add some space between buttons */
+}
+
+/* Style for edit button */
+.edit-btn {
+  background-color: #008CBA; /* Blue */
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-right: 5px; /* Add some space between buttons */
+}
+
+/* Style for delete button */
+.delete-btn {
+  background-color: #f44336; /* Red */
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+        main {
+            padding: 20px;
+        }
+
+        footer {
+            
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        /* Task List Styles */
+        #tasks {
+            margin-bottom: 20px;
+        }
+
+        #task-list {
+            list-style-type: none;
+            padding: 0;
+
+        }
+        #addc{
+             position: absolute;
+             top: 150px;
+             right: 100px;
+             background-color: #4CAF50; /* Green */
+             border: none;
+            color: white;
+            padding: 8px 16px;
+            text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+        }
+        
+        /* Edit Task Form Styles */
+        #edit-task-modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        #edit-task-modal .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        #edit-task-modal label {
+            color: #333;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        #edit-task-modal input[type="text"],
+        #edit-task-modal textarea,
+        #edit-task-modal input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        #edit-task-modal button[type="submit"] {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #edit-task-modal button[type="submit"]:hover {
+            background-color: #555;
+        }
+        #add-task-modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        #add-task-modal .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        #add-task-modal label {
+            color: #333;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        #add-task-modal input[type="text"],
+        #add-task-modal textarea,
+        #add-task-modal input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        #add-task-modal button[type="submit"] {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #add-task-modal button[type="submit"]:hover {
+            background-color: #555;
+        }
+
+        
+
+       
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 100;
+            top: 0;
+            width: 200%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 600px) {
+            #task-list li {
+                padding: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Task Management Application</h1>
+    </header>
+    <main>
+        <section id="tasks">
+            <h2>Tasks</h2>
+            <ul id="task-list">
+                <!-- Task items will be dynamically added here -->
+            </ul>
+        </section>
+        <section id="task-details">
+            <h2>Task Details</h2>
+            <div id="task-details-content">
+                <!-- Task details will be dynamically shown here -->
+            </div>
+        </section>
+    </main>
+    <div id="addc">
+        <button id="add-task-btn">Add Task</button>
+    </div>
+
+    <!-- Add Task Modal -->
+    <div id="add-task-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add New Task</h2>
+            <form id="add-task-form">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" required>
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" required></textarea>
+                <label for="due-date">Due Date:</label>
+                <input type="date" id="due-date" name="due-date" required>
+                <button type="submit">Add Task</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div id="edit-task-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Edit Task</h2>
+            <form id="edit-task-form">
+                <label for="edit-title">Title:</label>
+                <input type="text" id="edit-title" name="edit-title" required><br>
+                <label for="edit-description">Description:</label>
+                <textarea id="edit-description" name="edit-description" required></textarea>
+                <label for="edit-due-date">Due Date:</label>
+                <input type="date" id="edit-due-date" name="edit-due-date" required>
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
